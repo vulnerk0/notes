@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CPTS/Login Brute Forcing.md",
+                "file": "Web/SSRF.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Login Brute Forcing"
+              "title": "SSRF"
             }
           }
         ]
@@ -41,7 +41,7 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": true
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -142,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CPTS/Login Brute Forcing.md",
+                "file": "Web/Sessions.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Login Brute Forcing"
+              "title": "Outline of Sessions"
             }
           }
         ],
@@ -156,10 +156,12 @@
       }
     ],
     "direction": "horizontal",
-    "width": 238.5
+    "width": 238.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -172,15 +174,26 @@
   },
   "active": "24b9545ae0cd4dc6",
   "lastOpenFiles": [
-    "Tools/SQLMap.md",
-    "CPTS/Login Brute Forcing.md",
-    "CPTS/File Transfer.md",
-    "CPTS/Password Attacks.md",
+    "Web/SSTI.md",
+    "Web/SSI.md",
+    "Web/SSRF.md",
+    "Web/Sessions.md",
+    "Web/XSLT.md",
+    "Pasted image 20250826145140.png",
+    "Web/Authentication vulnerabilities.md",
     "Interesting websites and pages.md",
-    "CPTS/Footprinting/Host Based Enumeration.md",
-    "CPTS/Pivoting, Tunneling, and Port Forwarding.md",
-    "Web/Command injection.md",
+    "Web/Path traversal.md",
+    "Login Brute Forcing.md",
+    "Web/Information disclosure.md",
     "Web/File upload.md",
+    "Web/Command injection.md",
+    "CPTS/Pivoting, Tunneling, and Port Forwarding.md",
+    "CPTS/Password Attacks.md",
+    "CPTS/File Transfer.md",
+    "CPTS/Attacking Common Services.md",
+    "CPTS/Attacking Web Applications",
+    "Tools/SQLMap.md",
+    "CPTS/Footprinting/Host Based Enumeration.md",
     "Good boxes for practice.md",
     "Pasted image 20250727222451.png",
     "Pasted image 20250727222439.png",
@@ -191,10 +204,8 @@
     "Pasted image 20250727221919.png",
     "Pasted image 20250727143622.png",
     "Pasted image 20250727121808.png",
-    "Pasted image 20250727115840.png",
     "Web/Where to find?.md",
     "Web/SQL injection.md",
-    "CPTS/Attacking Common Services.md",
     "CPTS/Footprinting/Infrastructure based enumeration.md",
     "Tools/Interesting Tools.md",
     "Tools/Nmap.md",
@@ -202,18 +213,10 @@
     "Excalidraw/Drawing 2025-06-30 07.21.00.excalidraw.md",
     "Offensive/Footprinting/Untitled",
     "CPTS/Footprinting",
-    "Offensive/Drawing 2025-06-30 07.21.22.excalidraw.md",
     "Excalidraw",
-    "Questions.md",
-    "Shell/Main - Shell.md",
-    "Web/Path traversal.md",
-    "Web/SSRF.md",
-    "Web/Information disclosure.md",
     "Untitled",
     "CPTS",
     "Tools",
-    "Web/Authentication vulnerabilities.md",
-    "Web hacking/Main - Web.md",
     "Shell",
     "Web"
   ]

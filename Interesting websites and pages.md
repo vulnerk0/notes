@@ -17,4 +17,4 @@
 - [RastaMouseBlog](https://rastamouse.me/) writes excellent content on Red-Teaming, C2 infrastructure, pivoting, payloads
 - [SpecterOps](https://posts.specterops.io/offensive-security-guide-to-ssh-tunnels-and-proxies-b525cbd4d4c6) has written a post covering SSH Tunneling and the use of proxies over a maltitude of protocols.
 - [Plaintext's Pivoting Workshop](https://youtu.be/B3GxYyGFYmQ)  Plaintext put this together to help prepare players for Cyber Apocalypse CTF 2022.
-- [SANS](https://www.sans.org/webcasts/dodge-duck-dip-dive-dodge-making-the-pivot-cheat-sheet-119115/) puts out plenty of great infosec related information and webcasts like the one linked here are a great example of that.
+- [SANS](https://www.sans.org/webcasts/dodge-duck-dip-dive-dodge-making-the-pivot-cheat-sheet-119115/) puts out plenty of great infosec related information and webcasts like the one linked here is a great example of that.
