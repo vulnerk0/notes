@@ -1,4 +1,10 @@
 {
+<<<<<<< HEAD
   "cssTheme": "",
   "accentColor": "#852dcd"
+=======
+  "baseFontSize": 16,
+  "interfaceFontFamily": "JetBrainsMono Nerd Font",
+  "cssTheme": "Hackthebox"
+>>>>>>> 416797b1d3d96c9ce3a06893f489296c16f16a48
 }

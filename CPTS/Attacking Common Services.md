@@ -42,7 +42,11 @@ Password spray is when you have a valid password and you try it on many users, t
 nxc smb <IP> -u <USER_LIST> -p <PASSWORD>
 ```
 >[!note]
+<<<<<<< HEAD
 >By default `nxc` will exit after a successful login is found. Using the `--continue-on-success` flag will continue spraying even after a valid password is found. it is very useful for spraying a single password against a large user list. Additionally, if we are targetting a non-domain joined computer, we will need to use the option `--local-auth`.
+=======
+>By default CME will exit after a successful login is found. Using the `--continue-on-success` flag will continue spraying even after a valid password is found. it is very useful for spraying a single password against a large user list. Additionally, if we are targetting a non-domain joined computer, we will need to use the option `--local-auth`.
+>>>>>>> 416797b1d3d96c9ce3a06893f489296c16f16a48
 ## Remote Command Execution
 [PsExec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec) is a tool that lets us execute processes on other systems, complete with full interactivity for console applications, without having to install client software manually. It works because it has a Windows service image inside of its executable. It takes this service and deploys it to the admin$ share (by default) on the remote machine. It then uses the DCE/RPC interface over SMB to access the Windows Service Control Manager API. Next, it starts the PSExec service on the remote machine. The PSExec service then creates a [named pipe](https://docs.microsoft.com/en-us/windows/win32/ipc/named-pipes) that can send commands to the system. There are many tools we can use to abuse PsExec ;
 - [Impacket PsExec](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py) - Python PsExec like functionality example using [RemComSvc](https://github.com/kavika13/RemCom).
@@ -544,7 +548,11 @@ After that, a new terminal with the user lewen will appear. We can enumerate fur
 # Attacking DNS
 refer to [Host based enumeratio](obsidian://open?vault=Offensive&file=CPTS%2FFootprinting%2FHost%20Based%20Enumeration) paper for more information.
 #### Subbrute
+<<<<<<< HEAD
  [Subbrute](https://github.com/TheRook/subbrute) allows us to use self-defined resolvers and perform pure DNS brute-forcing attzacks during internal penetration tests on hosts that do not have Internet access.
+=======
+ [Subbrute](https://github.com/TheRook/subbrute) allows us to use self-defined resolvers and perform pure DNS brute-forcing attacks during internal penetration tests on hosts that do not have Internet access.
+>>>>>>> 416797b1d3d96c9ce3a06893f489296c16f16a48
  ```shell
 git clone https://github.com/TheRook/subbrute.git >> /dev/null 2>&1
 cd subbrute

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ## Host Discovery
+=======
+	## Host Discovery
+>>>>>>> 416797b1d3d96c9ce3a06893f489296c16f16a48
 more information about host discovery can be found [HERE]([https://nmap.org/book/host-discovery-strategies.html](https://nmap.org/book/host-discovery-strategies.html))
 When you gain access to the internal network, you might want to view all the available hosts on that network. You can use Nmap to discover hosts with this command:
 ```shell

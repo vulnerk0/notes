@@ -1,4 +1,10 @@
 {
+<<<<<<< HEAD
   "readableLineLength": false,
   "promptDelete": false
+=======
+  "promptDelete": false,
+  "readableLineLength": false,
+  "vimMode": true
+>>>>>>> 416797b1d3d96c9ce3a06893f489296c16f16a48
 }
