@@ -1,0 +1,19 @@
+# Overview
+## Writing/Editing a file
+>[!example] 
+>One of the ways to achive RCE is thru uploading a file from the database. You can write a php,aspx etc.. file to the webroot and navigate to it from the web to execute it.
+
+### MySQL
+You can write and/or edit a file in MySQL/MariaDB if these conditions are met:
+- You have sufficient privileges (FILE)
+- The `secure_file_priv` variable is NOT NULL
+**Check Privileges / reading**
+To check the current user privileges follow these steps:
+- Check the current user with `SELECT user();`
+- Check the privileges of said user with `SELECT grantee,privilege_type FROM INFORMATION_SCHEMA.user_privileges;`- if the user has the FILE privilege than he can READ files
+**Check privileges / writing**
+To check for write permissions you need to view the `secure_file_priv` variable thru the following query:
+`SELECT variable_name,variable_value FROM INFORMATION_SCHEMA.global_variables;`
+- If the value is `NULL` then you CAN'T write
+- If the value is `(EMPTY)` then you CAN write
+- If the value is a directory then you can write to that directory.
