@@ -1,24 +1,24 @@
 {
   "main": {
-    "id": "0b79130052198fc2",
+    "id": "cbf2ada3a52e1d84",
     "type": "split",
     "children": [
       {
-        "id": "8b5991df29db581e",
+        "id": "e2afb5d07688b647",
         "type": "tabs",
         "children": [
           {
-            "id": "9eeb314c7c2d4b55",
+            "id": "2ef70151fdcebcf7",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Interesting websites and pages.md",
+                "file": "OS/Windows.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Interesting websites and pages"
+              "title": "Windows"
             }
           }
         ]
@@ -27,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "3bc62064b672a9f1",
+    "id": "4c26b773473ebcf8",
     "type": "split",
     "children": [
       {
-        "id": "33119df27da4cdae",
+        "id": "021042566dd10121",
         "type": "tabs",
         "children": [
           {
-            "id": "bde76d1a91e239e6",
+            "id": "dee83e2c0e7cdcbf",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,12 +48,12 @@
             }
           },
           {
-            "id": "743daa403b50ad33",
+            "id": "bc8bf4b67db8cf28",
             "type": "leaf",
             "state": {
               "type": "search",
               "state": {
-                "query": "DNS",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -65,7 +65,7 @@
             }
           },
           {
-            "id": "21496e1f540b120d",
+            "id": "ef5f1ad7e14f5cc2",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -81,19 +81,20 @@
     "width": 300
   },
   "right": {
-    "id": "ea2f063b2ae21f5c",
+    "id": "bfb078b405c2d998",
     "type": "split",
     "children": [
       {
-        "id": "4b8e6cb09a91bf68",
+        "id": "a3f4b1b792675da1",
         "type": "tabs",
         "children": [
           {
-            "id": "47e50c35cd582e4d",
+            "id": "47584273f7d9e06a",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Web/File upload.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,24 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for File upload"
             }
           },
           {
-            "id": "1ed232da908b42e1",
+            "id": "e59797b29fc02d65",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Web/File upload.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from File upload"
             }
           },
           {
-            "id": "8199b472bd69433c",
+            "id": "a462861495f9f790",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -135,22 +137,21 @@
             }
           },
           {
-            "id": "c3e11704eee82532",
+            "id": "55c380d70cab5377",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Tools/SQLMap.md",
+                "file": "Web/File upload.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of SQLMap"
+              "title": "Outline of File upload"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "horizontal",
@@ -159,55 +160,38 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "9eeb314c7c2d4b55",
+  "active": "2ef70151fdcebcf7",
   "lastOpenFiles": [
-    "Web/XSLT.md",
-    "Web/Where to find?.md",
-    "Web/Sessions.md",
-    "Web/SSTI.md",
-    "Web/SSI.md",
-    "Web/Path traversal.md",
-    "Pasted image 20250826145140.png",
-    "Pasted image 20250727222451.png",
-    "Pasted image 20250727222439.png",
-    "Pasted image 20250727222435.png",
-    "Pasted image 20250727222433.png",
-    "Pasted image 20250727222129.png",
-    "Pasted image 20250727222022.png",
-    "Pasted image 20250727221919.png",
-    "Pasted image 20250727143622.png",
-    "Pasted image 20250727121808.png",
-    "Web/SSRF.md",
-    "CPTS/Attacking Common Services.md",
+    "Pasted image 20251022133649.png",
+    "Pasted image 20251021103441.png",
     "Interesting websites and pages.md",
-    "Tools/Interesting Tools.md",
-    "Web/Command injection.md",
-    "Tools/SQLMap.md",
-    "BugBounties/Application Analysis.md",
-    "Web/SQL injection.md",
-    "Tools/Nmap.md",
-    "CPTS/Footprinting/Infrastructure based enumeration.md",
-    "CPTS/Footprinting/Host Based Enumeration.md",
-    "CPTS/Footprinting/Footprinting.md",
+    "OS/Windows.md",
+    "OS",
     "BugBounties/Content Discovery.md",
-    "Where to find?.md",
     "Good boxes for practice.md",
-    "Untitled.base",
-    "images",
-    "Web/HTTP verb tampering.md",
-    "BugBounties",
+    "BugBounties/Application Analysis.md",
+    "Where to find?.md",
     "Web/File upload.md",
-    "Web/Information disclosure.md",
+    "Web/Command injection.md",
+    "Web/SSTI.md",
+    "Web/SSRF.md",
     "Web/XXE.md",
-    "CPTS/File Transfer.md"
+    "Web/XSLT.md",
+    "Web/SSI.md",
+    "Web/SQL injection.md",
+    "Web/Sessions.md",
+    "Web/Where to find?.md",
+    "Web/File inclusion.md"
   ]
 }
