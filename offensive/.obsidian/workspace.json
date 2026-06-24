@@ -1,0 +1,197 @@
+{
+  "main": {
+    "id": "cbf2ada3a52e1d84",
+    "type": "split",
+    "children": [
+      {
+        "id": "e2afb5d07688b647",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2ef70151fdcebcf7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "OS/Windows.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Windows"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4c26b773473ebcf8",
+    "type": "split",
+    "children": [
+      {
+        "id": "021042566dd10121",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dee83e2c0e7cdcbf",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "bc8bf4b67db8cf28",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "ef5f1ad7e14f5cc2",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "bfb078b405c2d998",
+    "type": "split",
+    "children": [
+      {
+        "id": "a3f4b1b792675da1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "47584273f7d9e06a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Web/File upload.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for File upload"
+            }
+          },
+          {
+            "id": "e59797b29fc02d65",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Web/File upload.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from File upload"
+            }
+          },
+          {
+            "id": "a462861495f9f790",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "55c380d70cab5377",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Web/File upload.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of File upload"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false
+    }
+  },
+  "active": "2ef70151fdcebcf7",
+  "lastOpenFiles": [
+    "Pasted image 20251022133649.png",
+    "Pasted image 20251021103441.png",
+    "Interesting websites and pages.md",
+    "OS/Windows.md",
+    "OS",
+    "BugBounties/Content Discovery.md",
+    "Good boxes for practice.md",
+    "BugBounties/Application Analysis.md",
+    "Where to find?.md",
+    "Web/File upload.md",
+    "Web/Command injection.md",
+    "Web/SSTI.md",
+    "Web/SSRF.md",
+    "Web/XXE.md",
+    "Web/XSLT.md",
+    "Web/SSI.md",
+    "Web/SQL injection.md",
+    "Web/Sessions.md",
+    "Web/Where to find?.md",
+    "Web/File inclusion.md"
+  ]
+}
