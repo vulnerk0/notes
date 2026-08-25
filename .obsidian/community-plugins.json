@@ -2,5 +2,7 @@
   "obsidian-excalidraw-plugin",
   "obsidian-icon-folder",
   "obsidian-admonition",
-  "table-editor-obsidian"
+  "table-editor-obsidian",
+  "templater-obsidian",
+  "url-into-selection"
 ]

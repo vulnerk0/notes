@@ -25,3 +25,4 @@
 - [Trojan war against sota LLMS](https://devanshbatham.hashnode.dev/trojan-war-against-sota-llms)
 - [SANS](https://www.sans.org/webcasts/dodge-duck-dip-dive-dodge-making-the-pivot-cheat-sheet-119115/) puts out plenty of great infosec related information and webcasts like the one linked here is a great example of that.
 - [Statistically-likely-usernames](https://github.com/insidetrust/statistically-likely-usernames) 
+- [malapi]([malapi](https://malapi.io/)) gives you common windows APIs used by malware

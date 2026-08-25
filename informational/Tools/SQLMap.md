@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ### GET/POST Requests
-=======
-	### GET/POST Requests
->>>>>>> 416797b1d3d96c9ce3a06893f489296c16f16a48
 When dealing with a parameter that might be injectable, you want to make sure that the sqlmap command is formatted correctly, you can do this using the Copy as cURL from the network tab in devtools. to check a GET parameter use this command
 ```
 sqlmap "example.com/index.php?vuln=x" -p vuln
@@ -68,11 +64,7 @@ In this case, simply using the `'` is not sufficient to close the statement corr
 #### level/risk
 - the option `--level=(1-5)` extends the number of vectors and boundaries, the higher the number, the less likely the payload will succeed (because the payload is uncommon)
 - the option `--risk=(1-3)` extends the used vector set based on their risk of causing problems to the server (try to avoid using risk=3 in production servers)
-<<<<<<< HEAD
 ### Advanced
-=======
-#### Advanced
->>>>>>> 416797b1d3d96c9ce3a06893f489296c16f16a48
 There are other tuning options to further adapt to the target behavior, these are some of them:
 #### Status Codes
 If the server gives you different status codes based on your input, example like a server that gives you 500 when you provide an invalid (false) sqli payload and a 200 when providing a valid (true) one. You can use the `--code=200` switch and provide the true statement code, this way sqlmap will differentiate between good and bad payloads.
