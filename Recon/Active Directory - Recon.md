@@ -21,7 +21,7 @@ pktmon etl2pcap cap.etl --out cap.pcap
 
 ##### responder
 ```shell
-sudo reponder -I eth0 -A 
+sudo responder -I eth0 -A 
 ```
 --- 
 #### active host discovery

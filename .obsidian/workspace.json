@@ -55,7 +55,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "NTDS",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -80,7 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 210.71765899658203
+    "width": 282.5
   },
   "right": {
     "id": "bfb078b405c2d998",
@@ -144,7 +144,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Exploitation/Password Attacks.md",
+                "file": "Exploitation/Attacking Common Applications.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -177,10 +177,29 @@
   },
   "active": "434407ad926754c8",
   "lastOpenFiles": [
-    "Exploitation/Attacking Common Services.md",
-    "Discovery template.md",
-    "informational/Tools/Interesting Tools.md",
+    "Exploitation/Password Attacks.md",
+    "informational/Active Directory/AD Fundamentals.md",
     "Exploitation/Attacking Common Applications.md",
+    "Catalog.md",
+    "informational/images/Pasted image 20260912154120.png",
+    "informational/images/Pasted image 20260914172631.png",
+    "informational/images/Pasted image 20260914172157.png",
+    "informational/images/Pasted image 20260914171451.png",
+    "informational/images/Pasted image 20260914171404.png",
+    "informational/images/Pasted image 20260914171354.png",
+    "informational/images/Pasted image 20260914171351.png",
+    "informational/images/Pasted image 20260914141036.png",
+    "informational/images/Pasted image 20260914140953.png",
+    "informational/images/Pasted image 20260914140916.png",
+    "informational/Interesting websites and pages.md",
+    "Exploitation/Attacking Active Directory.md",
+    "Exploitation/Attacking Common Services.md",
+    "Post-Exploitation/File Transfer.md",
+    "Recon/Active Directory - Recon.md",
+    "Discovery template.md",
+    "Recon/Documentation & reporting.md",
+    "Recon/Host Based Enumeration.md",
+    "informational/Tools/Interesting Tools.md",
     "Methodologies/0- Methodology Overview.md",
     "Methodologies/6- Reporting.md",
     "Methodologies/5- Lateral Movement.md",
@@ -199,21 +218,9 @@
     "Methodologies/0- Methodology Overview.md.tmp.4988.9eb5c740c2e5",
     "KAUST_Summer/Project/Notices.md",
     "Drawing 2026-08-11 17.02.31.excalidraw.md",
-    "Exploitation/Password Attacks.md",
     "Lateral movement/Linux Privilege Escalation.md",
     "informational/Active Directory/Tools-of-the-trade.md",
     "informational/Active Directory/AD Protocols.md",
-    "informational/Active Directory/AD Fundamentals.md",
-    "informational/Active Directory/AD Accounts, Groups and privs.md",
-    "Recon/Host Based Enumeration.md",
-    "Recon/Active Directory - Recon.md",
-    "KAUST_Summer/Project/Task - Create a Web Interface.md",
-    "KAUST_Summer/Project/Drawing 2026-08-04 16.03.25.excalidraw.md",
-    "KAUST_Summer/Project/Task - Search for 5 datasets that are comparable with Edge-IIoT.md",
-    "Excalidraw/Drawing 2026-07-23 15.31.02.excalidraw.md",
-    "KAUST_Summer/Project/Datasets.md",
-    "Excalidraw",
-    "Pasted image 20251022133649.png",
-    "Pasted image 20251021103441.png"
+    "Excalidraw"
   ]
 }

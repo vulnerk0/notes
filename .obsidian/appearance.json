@@ -1,3 +1,5 @@
 {
-  "cssTheme": "Typewriter"
+  "cssTheme": "Typewriter",
+  "baseFontSizeAction": true,
+  "baseFontSize": 22
 }
